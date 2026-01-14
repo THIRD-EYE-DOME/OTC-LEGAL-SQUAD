@@ -11,22 +11,45 @@ import { OmegaNineProtocolOutput } from '@/ai/flows/omega-9-protocol';
 import { Loader2, Zap, Brain, Code, Crown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-// Simple HTML sanitization function to prevent XSS attacks
-function sanitizeHTML(html: string): string {
-  // Remove script tags and event handlers
-  return html
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
-    .replace(/javascript:/gi, '');
-}
-
-// Format response with basic markdown to HTML conversion
-function formatResponse(text: string): string {
-  const sanitized = sanitizeHTML(text);
-  return sanitized
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/```(\w+)?\n([\s\S]+?)```/g, '<pre><code>$2</code></pre>')
-    .replace(/\n/g, '<br />');
+// Component to safely render markdown-like text without HTML injection
+function MarkdownRenderer({ text }: { text: string }) {
+  // Split by code blocks first
+  const parts = text.split(/(```[\s\S]*?```)/g);
+  
+  return (
+    <div className="space-y-2">
+      {parts.map((part, index) => {
+        // Check if this is a code block
+        if (part.startsWith('```')) {
+          const codeContent = part.replace(/```\w*\n?/g, '').replace(/```$/g, '');
+          return (
+            <pre key={index} className="bg-muted p-3 rounded overflow-x-auto">
+              <code className="text-sm">{codeContent}</code>
+            </pre>
+          );
+        }
+        
+        // Process regular text for bold markers
+        const textParts = part.split(/(\*\*.*?\*\*)/g);
+        return (
+          <div key={index}>
+            {textParts.map((textPart, textIndex) => {
+              if (textPart.startsWith('**') && textPart.endsWith('**')) {
+                return <strong key={textIndex}>{textPart.slice(2, -2)}</strong>;
+              }
+              // Split by line breaks and render each line
+              return textPart.split('\n').map((line, lineIndex, arr) => (
+                <React.Fragment key={`${textIndex}-${lineIndex}`}>
+                  {line}
+                  {lineIndex < arr.length - 1 && <br />}
+                </React.Fragment>
+              ));
+            })}
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 export default function Omega9Page() {
@@ -225,12 +248,9 @@ export default function Omega9Page() {
             {response && !error && (
               <div className="space-y-4">
                 <div className="p-4 bg-muted/50 rounded-md">
-                  <div 
-                    className="prose prose-sm max-w-none dark:prose-invert"
-                    dangerouslySetInnerHTML={{ 
-                      __html: formatResponse(response.response)
-                    }}
-                  />
+                  <div className="prose prose-sm max-w-none dark:prose-invert">
+                    <MarkdownRenderer text={response.response} />
+                  </div>
                 </div>
 
                 {response.nextStep && (
