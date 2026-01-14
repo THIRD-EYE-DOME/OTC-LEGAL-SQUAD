@@ -11,6 +11,24 @@ import { OmegaNineProtocolOutput } from '@/ai/flows/omega-9-protocol';
 import { Loader2, Zap, Brain, Code, Crown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
+// Simple HTML sanitization function to prevent XSS attacks
+function sanitizeHTML(html: string): string {
+  // Remove script tags and event handlers
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+    .replace(/javascript:/gi, '');
+}
+
+// Format response with basic markdown to HTML conversion
+function formatResponse(text: string): string {
+  const sanitized = sanitizeHTML(text);
+  return sanitized
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/```(\w+)?\n([\s\S]+?)```/g, '<pre><code>$2</code></pre>')
+    .replace(/\n/g, '<br />');
+}
+
 export default function Omega9Page() {
   const [userMessage, setUserMessage] = useState('');
   const [triggerPhrase, setTriggerPhrase] = useState<'Leo Leo' | 'Sophia' | 'Nero' | 'default'>('default');
@@ -210,10 +228,7 @@ export default function Omega9Page() {
                   <div 
                     className="prose prose-sm max-w-none dark:prose-invert"
                     dangerouslySetInnerHTML={{ 
-                      __html: response.response
-                        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/```(\w+)?\n([\s\S]+?)```/g, '<pre><code>$2</code></pre>')
-                        .replace(/\n/g, '<br />') 
+                      __html: formatResponse(response.response)
                     }}
                   />
                 </div>

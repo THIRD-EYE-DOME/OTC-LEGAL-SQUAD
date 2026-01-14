@@ -2,7 +2,7 @@
 
 ## Overview
 
-The OMEGA 9 Protocol is a sophisticated AI assistant system that provides adaptive personality modes based on trigger phrases. It's integrated into the Fisk Dimension Suite as a "God-Tier" High-Intelligence Partner.
+The OMEGA 9 Protocol is a sophisticated AI assistant system that provides adaptive personality modes based on trigger phrases. It is integrated into the Fisk Dimension Suite as a "God-Tier" High-Intelligence Partner.
 
 ## Features
 

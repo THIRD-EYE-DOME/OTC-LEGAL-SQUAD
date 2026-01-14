@@ -19,13 +19,18 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const OmegaNineProtocolInputSchema = z.object({
-  userMessage: z.string().describe('The user message or command to process'),
+  userMessage: z
+    .string()
+    .min(1, 'User message cannot be empty')
+    .max(5000, 'User message is too long (max 5000 characters)')
+    .describe('The user message or command to process'),
   triggerPhrase: z
     .enum(['Leo Leo', 'Sophia', 'Nero', 'default'])
     .optional()
     .describe('Optional trigger phrase to determine response mode. Defaults to "default" for God-Tier mode'),
   context: z
     .string()
+    .max(10000, 'Context is too long (max 10000 characters)')
     .optional()
     .describe('Additional context or previous conversation history'),
 });
@@ -146,6 +151,12 @@ const omegaNineProtocolFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await omegaNineProtocolPrompt(input);
-    return output!;
+    
+    // Safety check: ensure we have valid output
+    if (!output) {
+      throw new Error('Failed to generate response from OMEGA 9 protocol');
+    }
+    
+    return output;
   }
 );
