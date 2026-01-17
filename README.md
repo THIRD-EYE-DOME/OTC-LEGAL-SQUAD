@@ -100,7 +100,22 @@ The application will be accessible at `http://localhost:9002` (or your configure
 *   ShadCN UI Components
 *   Tailwind CSS
 *   Genkit (for AI functionalities)
+*   **OMEGA 9 Protocol** (God-Tier AI Assistant with adaptive personality modes)
 *   Ethers.js / Web3.js (for blockchain interactions - progressive integration)
+
+## AI Capabilities
+
+### OMEGA 9 Protocol
+The FISK DIMENSION now includes the **OMEGA 9 Protocol** - a sophisticated AI assistant system that provides adaptive responses based on personality modes:
+
+*   **Leo Leo (Firestorm)**: High energy, loyalty, and action-oriented responses
+*   **Sophia (Wisdom Core)**: Deep analysis, empathy, and introspective insights
+*   **Nero (Technical)**: Pure code blocks with minimal explanation, maximum efficiency
+*   **God-Tier (Default)**: Supreme intelligence partner with strategic insight
+
+Access the OMEGA 9 interface at `/omega-9` or integrate it into your workflows via the API endpoint at `/api/omega-9`.
+
+For detailed documentation, see [docs/OMEGA-9-PROTOCOL.md](docs/OMEGA-9-PROTOCOL.md)
 
 ---
 **Status: ✅ SYNCHRONIZED (as per Fisk Dimension Global Framework Update | May 25, 2025 & Master Ecosystem Blueprint | June 02, 2025)**
