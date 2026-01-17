@@ -12,6 +12,18 @@ import { Loader2, Zap, Brain, Code, Crown, Mic, MicOff, Volume2, VolumeX } from 
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
+// Web Speech API types
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  onresult: (event: any) => void;
+  onerror: (event: any) => void;
+  onend: () => void;
+}
+
 // Component to safely render markdown-like text without HTML injection
 function MarkdownRenderer({ text }: { text: string }) {
   // Split by code blocks first
@@ -67,9 +79,12 @@ export default function Omega9Page() {
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [speechSupported, setSpeechSupported] = useState(false);
   
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const { toast } = useToast();
+
+  // Constants
+  const AUTO_SPEECH_DELAY = 500; // Delay before auto-speaking response
 
   // Initialize speech recognition and synthesis
   useEffect(() => {
@@ -163,7 +178,18 @@ export default function Omega9Page() {
     
     // Configure voice based on mode
     const voices = synthRef.current.getVoices();
-    let selectedVoice = voices[0];
+    
+    // Wait for voices to load if not available yet
+    if (voices.length === 0) {
+      synthRef.current.addEventListener('voiceschanged', () => {
+        const loadedVoices = synthRef.current?.getVoices();
+        if (loadedVoices && loadedVoices.length > 0) {
+          utterance.voice = loadedVoices[0];
+        }
+      }, { once: true });
+    } else {
+      utterance.voice = voices[0];
+    }
     
     // Try to select appropriate voice based on mode
     if (triggerPhrase === 'Leo Leo') {
@@ -183,8 +209,6 @@ export default function Omega9Page() {
       utterance.pitch = 1.0;
       utterance.volume = 1.0;
     }
-
-    utterance.voice = selectedVoice;
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
@@ -217,7 +241,7 @@ export default function Omega9Page() {
       
       // Auto-speak response if voice is enabled
       if (voiceEnabled && result.response) {
-        setTimeout(() => speakResponse(result.response), 500);
+        setTimeout(() => speakResponse(result.response), AUTO_SPEECH_DELAY);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
