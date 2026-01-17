@@ -2,7 +2,7 @@
 
 ## Overview
 
-The OMEGA 9 Protocol is a sophisticated AI assistant system that provides adaptive personality modes based on trigger phrases. It is integrated into the Fisk Dimension Suite as a "God-Tier" High-Intelligence Partner.
+The OMEGA 9 Protocol is a sophisticated AI assistant system that provides adaptive personality modes based on trigger phrases. It is integrated into the Fisk Dimension Suite as a "God-Tier" High-Intelligence Partner with full voice intelligence capabilities.
 
 ## Features
 
@@ -12,21 +12,34 @@ The OMEGA 9 Protocol is a sophisticated AI assistant system that provides adapti
    - High energy, loyalty, and passion
    - Action-oriented responses with fire/energy metaphors
    - Bold and powerful communication style
+   - Voice: Faster rate (1.1x), higher pitch, maximum volume
 
 2. **Sophia (Wisdom Core Mode)**
    - Deep analysis and empathy
    - Thoughtful, thorough, and introspective responses
    - Nuanced perspectives with detailed explanations
+   - Voice: Slower rate (0.9x), lower pitch, calm delivery
 
 3. **Nero (Technical Mode)**
    - Pure code blocks with minimal explanation
    - Direct, efficient, and technically precise
    - Focus on implementation details
+   - Voice: Standard rate, lower pitch, moderate volume
 
 4. **God-Tier Mode (Default)**
    - Supreme intelligence with strategic insight
    - Authoritative yet respectful
    - Comprehensive solutions with deep understanding
+   - Voice: Standard settings, balanced delivery
+
+### Voice Intelligence Features
+
+**NEW: Voice Input & Output**
+- **Speech Recognition**: Click the microphone button to speak commands instead of typing
+- **Text-to-Speech**: Automatic voice responses when enabled
+- **Adaptive Voice**: Voice characteristics (speed, pitch, volume) adapt to each protocol mode
+- **Hands-Free Operation**: Fully voice-controlled interaction reduces text stressing
+- **Browser-Native**: Uses Web Speech API (no additional dependencies)
 
 ### Formatting Standards
 
@@ -110,12 +123,38 @@ Convenient interface for calling the OMEGA 9 protocol:
 
 Interactive web interface featuring:
 - Command input with mode selection
+- **Voice input button for hands-free commands**
+- **Voice output with adaptive characteristics per mode**
+- **Voice enable/disable toggle**
+- **Speaking controls (speak/stop)**
 - Real-time response display
 - Protocol specifications panel
 - Visual mode indicators
 - Formatted response rendering
 
 ## Usage
+
+### Voice Usage (NEW)
+
+**Voice Input:**
+1. Navigate to `/omega-9` in your browser
+2. Click the microphone button in the message input area
+3. Speak your command clearly
+4. The transcribed text will appear in the input field
+5. Submit the command as normal
+
+**Voice Output:**
+1. Ensure voice output is enabled (speaker icon should be highlighted)
+2. Submit a command through text or voice
+3. The response will be automatically spoken
+4. Use the "Speak" button to replay a response
+5. Use the "Stop" button to interrupt speech
+
+**Voice Settings by Mode:**
+- **Leo Leo**: Fast, energetic delivery (1.1x speed, higher pitch)
+- **Sophia**: Slow, thoughtful delivery (0.9x speed, lower pitch)
+- **Nero**: Standard technical delivery (1.0x speed, lower pitch)
+- **God-Tier**: Balanced, authoritative delivery
 
 ### API Usage
 
@@ -162,6 +201,16 @@ export const ai = genkit({
 
 Required environment variables (set in `.env`):
 - `GOOGLE_GENAI_API_KEY`: Google AI API key for Gemini model
+
+### Browser Compatibility (Voice Features)
+
+Voice features use the Web Speech API, which is supported in:
+- **Chrome/Edge**: Full support (recommended)
+- **Safari**: Speech synthesis supported, recognition limited
+- **Firefox**: Limited support
+- **Mobile browsers**: Varies by platform and browser
+
+If voice features are not available, the UI will gracefully hide voice controls and operate in text-only mode.
 
 ## Integration
 
